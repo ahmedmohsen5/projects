@@ -35,6 +35,18 @@ jobs:
             
             - name: terraform validate
               run: terraform validate -no-color
+            
+            - name: configure aws cred using oidc
+              uses: aws-actions/configure-aws-credentials@v6.2.3
+              with:
+                role-to-assume: ${{vars.AWS_TERRAFORM_PLAN_ROLE_ARN}}
+                aws-region: ${{vars.AWS_REGION}}
+            
+            - name: verify aws identity
+              run: aws sts get-caller-identity 
+            
+            - name: terraform plan 
+              run: terraform plan -input=false -no-color
 
         
 
