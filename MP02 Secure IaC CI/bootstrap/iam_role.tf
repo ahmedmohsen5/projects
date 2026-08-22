@@ -29,7 +29,10 @@ data "aws_iam_policy_document" "github_trust" {
 
       values = [
         "repo:${var.github_owner}/${var.github_repository}:pull_request",
-        "repo:${var.github_owner}/${var.github_repository}:ref:refs/heads/main"
+        "repo:${var.github_owner}/${var.github_repository}:ref:refs/heads/main",
+
+        "repo:${var.github_owner}@36478683/projects@1143020344:pull_request",
+        "repo:${var.github_owner}@36478683/projects@1143020344:ref:refs/heads/main"
       ]
     }
 
@@ -46,7 +49,6 @@ resource "aws_iam_role" "terraform_plan" {
 data "aws_iam_policy_document" "terraform_plan_permissions" {
   statement {
     effect = "Allow"
-
     actions = [
       "ec2:DescribeAvailabilityZones"
     ]
