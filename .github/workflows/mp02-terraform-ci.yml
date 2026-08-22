@@ -27,7 +27,14 @@ jobs:
               uses: hashicorp/setup-terraform@v4.0.1
               with: 
                 terraform_version: 1.15.8
+            - name: terraform format check 
+              run: terraform fmt -check -recursive
+
+            - name: terraform init
+              run: terraform init -input=false
             
+            - name: terraform validate
+              run: terraform validate 
 
         
 
