@@ -34,7 +34,7 @@ jobs:
               run: terraform init -input=false
             
             - name: terraform validate
-              run: terraform validate 
+              run: terraform validate -no-color
 
         
 
