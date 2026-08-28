@@ -60,6 +60,9 @@ jobs:
                 if [ -z "$PLAN_SUMMARY" ]; then
                     PLAN_SUMMARY="Plan completed - see workflow logs"
                 fi
+                if [ -z "$PLAN_SUMMARY" ]; then
+                    PLAN_SUMMARY="Plan completed - see workflow logs"
+                fi
                 {
                     echo "## MP02 Terraform CI"
                     echo ""
