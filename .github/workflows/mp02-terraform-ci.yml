@@ -57,8 +57,8 @@ jobs:
               shell: bash
               run: |
                 PLAN_SUMMARY=$(grep -E '^(Plan:|No changes\.)' terraform-plan.txt | tail -n 1 || true)
-                if [ -z "$PLAN_SUMMARY" ]; then
-                    PLAN_SUMMARY="Plan completed - see workflow logs"
+                if [ -z "$PLAN_SUMMARY" ] && grep -q '^Changes to Outputs:' terraform-plan.txt; then
+                    PLAN_SUMMARY="Output changes detected"
                 fi
                 if [ -z "$PLAN_SUMMARY" ]; then
                     PLAN_SUMMARY="Plan completed - see workflow logs"
