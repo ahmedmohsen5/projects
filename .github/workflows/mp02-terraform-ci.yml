@@ -8,7 +8,9 @@ on:
             - ".github/workflows/mp02-terraform-ci.yml"
     
     workflow_dispatch: 
-    
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 permissions: 
     contents: read
@@ -17,6 +19,7 @@ jobs:
     terraform-ci:
         name: terraform validate and plan 
         runs-on: ubuntu-latest
+        timeout-minutes: 5
         defaults:
             run:
                 working-directory: "MP02 Secure IaC CI/terraform"
@@ -46,7 +49,27 @@ jobs:
               run: aws sts get-caller-identity 
             
             - name: terraform plan 
-              run: terraform plan -input=false -no-color
+              shell: bash
+              run: |
+                set -o pipefail
+                terraform plan -input=false -no-color | tee terraform-plan.txt
+            - name: write workflow summary
+              shell: bash
+              run: |
+                PLAN_SUMMARY=$(grep -E '^(Plan:|No changes\.)' terraform-plan.txt | tail -n 1 || true)
+                if [ -z "$PLAN_SUMMARY" ]; then
+                    PLAN_SUMMARY="Plan completed - see workflow logs"
+                fi
+                {
+                    echo "## MP02 Terraform CI"
+                    echo ""
+                    echo "- Commit: \`${GITHUB_SHA::7}\`"
+                    echo "- Ref: \`${GITHUB_REF}\`"
+                    echo "- Terraform format: ✅ Passed"
+                    echo "- Terraform validate: ✅ Passed"
+                    echo "- AWS OIDC identity: ✅ Verified"
+                    echo "- Terraform plan: \`${PLAN_SUMMARY}\`"
+                    } >> "$GITHUB_STEP_SUMMARY"
 
         
 
