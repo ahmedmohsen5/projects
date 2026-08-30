@@ -3,9 +3,6 @@ on:
     pull_request: 
         branches: 
             - main
-        paths:
-            - "MP02 Secure IaC CI/**"
-            - ".github/workflows/mp02-terraform-ci.yml"
     
     workflow_dispatch: 
 concurrency:
